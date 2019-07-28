@@ -1,0 +1,8 @@
+/target
+/output.plantuml
+/.idea/libraries/
+/plantuml-from-code.iml
+/.idea/misc.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/checkstyle-idea.xml
+/.idea/$PRODUCT_WORKSPACE_FILE$
