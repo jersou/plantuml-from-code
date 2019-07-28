@@ -167,7 +167,9 @@ public class PlantUmlGenerator {
 				e.printStackTrace();
 			}
 		}
-
+		if (config.getAssoCompoProcessor() != null) {
+			config.getAssoCompoProcessor().addCustomAssoCompo(clazz, lines);
+		}
 
 		return lines;
 	}
@@ -176,7 +178,8 @@ public class PlantUmlGenerator {
 			throws ClassNotFoundException {
 		Class fieldClass = getTypeOfField(field);
 
-		if (fieldClass != null && !fieldClass.getSimpleName().isEmpty()) {
+		if (fieldClass != null && (hasCustomAnnot(field) || isNotIgnored(fieldClass))
+				&& !fieldClass.getSimpleName().isEmpty()) {
 			String assoType = null;
 			boolean ignore = false;
 			for (Annotation annotation : field.getDeclaredAnnotations()) {
@@ -210,6 +213,9 @@ public class PlantUmlGenerator {
 					else {
 						ignore = true;
 					}
+					break;
+				} else if (config.getAssoCompoProcessor() != null &&
+						config.getAssoCompoProcessor().addCustomAssoCompo(clazz, limit, lines, fieldClass, annotation)) {
 					break;
 				}
 			}
@@ -397,7 +403,14 @@ public class PlantUmlGenerator {
 		return clazz.getSimpleName();
 	}
 
-	private boolean fieldHasAnnot(Field field, Class annot) {
+	private boolean hasCustomAnnot(Field field) {
+		if (config.getAssoCompoProcessor() != null) {
+			return config.getAssoCompoProcessor().hasCustomAnnot(field);
+		}
+		return false;
+	}
+
+	public boolean fieldHasAnnot(Field field, Class annot) {
 		return Arrays.stream(field.getAnnotations())
 				.anyMatch(a -> a.annotationType().equals(annot));
 	}

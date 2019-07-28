@@ -23,6 +23,7 @@ public class PlantUmlGeneratorConfig {
 	private List<String> packageToSelect = new ArrayList<>();
 	private Integer limit;
 	private boolean processNonHibernateAnnotations = false;
+	private IAssoCompoProcessor assoCompoProcessor;
 
 	public void addEntrypointClass(Class... classArray) {
 		entrypointClassList.addAll(Arrays.asList(classArray));
