@@ -245,36 +245,6 @@ public class PlantUmlGenerator {
 		}
 	}
 
-	private String convertRemoteRefToClass(String serviceName, String path) {
-		String packageName = config.getServiceToNamespaceMap()
-				.get(serviceName);
-		Assert.notNull(packageName, "packageName is null for " + serviceName);
-		String className = path;
-		if (className.endsWith("ies")) {
-			className = className.replaceAll("ies$", "y");
-		}
-		else if (className.endsWith("s")) {
-			className = className.replaceAll("s$", "");
-		}
-		String classToFind = className;
-
-		List<Class> found = config.getEntrypointClassList().stream()
-				.filter(c -> c.getName().toLowerCase()
-						.startsWith(packageName.toLowerCase()))
-				.filter(c -> c.getName().toLowerCase()
-						.endsWith("." + classToFind.toLowerCase()))
-				.collect(
-						Collectors.toList());
-
-		if (found.size() == 1) {
-			return getUmlName(found.get(0));
-		}
-		return // "TODO_" + found.size() + "_" +
-		serviceName.replaceAll("-", "_")
-				+ "."
-				+ path;
-	}
-
 	private String getNamespace(Class clazz) {
 		if (config.isGenerateAutoNamespaces()) {
 			System.out.println(clazz.getPackage().getName());
@@ -395,7 +365,7 @@ public class PlantUmlGenerator {
 		}
 	}
 
-	private String getUmlName(Class clazz) {
+	public String getUmlName(Class clazz) {
 		String namespace = getNamespace(clazz);
 		if (namespace != "") {
 			return namespace + "." + clazz.getSimpleName();
@@ -403,7 +373,7 @@ public class PlantUmlGenerator {
 		return clazz.getSimpleName();
 	}
 
-	private boolean hasCustomAnnot(Field field) {
+	public boolean hasCustomAnnot(Field field) {
 		if (config.getAssoCompoProcessor() != null) {
 			return config.getAssoCompoProcessor().hasCustomAnnot(field);
 		}
@@ -415,7 +385,7 @@ public class PlantUmlGenerator {
 				.anyMatch(a -> a.annotationType().equals(annot));
 	}
 
-	private boolean classdHasAnnot(Class clazz, Class annot) {
+	public boolean classdHasAnnot(Class clazz, Class annot) {
 		return Arrays.stream(clazz.getAnnotations())
 				.anyMatch(a -> a.annotationType().equals(annot));
 	}
